@@ -1,7 +1,8 @@
 # Agent_demo
 
 OpenClaw + SuperGemma4 로컬 AI 에이전트 데모 레포지토리입니다.
-SuperGemma4: https://huggingface.co/Jiunsong/supergemma4-26b-uncensored-mlx-4bit-v2
+- OpenClaw: https://github.com/openclaw/openclaw
+- SuperGemma4: https://huggingface.co/Jiunsong/supergemma4-26b-uncensored-mlx-4bit-v2
 
 ## 데모 목록
 
