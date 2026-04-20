@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오늘의 AI 기술 뉴스</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent2: #7ee787;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --tag-bg: #1f2937;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      max-width: 800px;
+      margin: 0 auto 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #58a6ff, #7ee787);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .meta {
+      text-align: right;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .meta span {
+      display: block;
+    }
+
+    .source-tabs {
+      max-width: 800px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 0.35rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      transition: all 0.15s;
+    }
+
+    .tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+      font-weight: 600;
+    }
+
+    .news-list {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .news-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      transition: border-color 0.15s;
+      animation: fadeIn 0.3s ease forwards;
+      opacity: 0;
+    }
+
+    .news-card:hover {
+      border-color: var(--accent);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+    }
+
+    .rank {
+      font-size: 0.72rem;
+      color: var(--muted);
+      min-width: 20px;
+      padding-top: 2px;
+      font-weight: 600;
+    }
+
+    .card-body { flex: 1; }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--text);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-title:hover { color: var(--accent); }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .card-meta .score {
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    .tag {
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 0.7rem;
+      color: var(--accent);
+    }
+
+    .loading {
+      max-width: 800px;
+      margin: 3rem auto;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #2d1f1f;
+      border: 1px solid #6e2020;
+      border-radius: 10px;
+      padding: 1.2rem;
+      color: #f97583;
+      font-size: 0.88rem;
+    }
+
+    .refresh-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .refresh-btn:hover { border-color: var(--accent); }
+
+    footer {
+      max-width: 800px;
+      margin: 3rem auto 0;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+    }
+
+    footer a { color: var(--accent); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🤖</div>
+    <div>
+      <h1>오늘의 AI 기술 뉴스</h1>
+      <div class="subtitle">Powered by SuperGemma4 × OpenClaw</div>
+    </div>
+  </div>
+  <div class="meta">
+    <span id="date-display"></span>
+    <button class="refresh-btn" onclick="loadNews()">↻ 새로고침</button>
+  </div>
+</header>
+
+<div class="source-tabs">
+  <div class="tab active" onclick="setFilter('all', this)">전체</div>
+  <div class="tab" onclick="setFilter('llm', this)">LLM</div>
+  <div class="tab" onclick="setFilter('agent', this)">Agent</div>
+  <div class="tab" onclick="setFilter('open source', this)">오픈소스</div>
+  <div class="tab" onclick="setFilter('research', this)">연구</div>
+</div>
+
+<div id="content">
+  <div class="loading">
+    <div class="spinner"></div>
+    <p>AI 뉴스 불러오는 중...</p>
+  </div>
+</div>
+
+<footer>
+  데이터 출처: <a href="https://hn.algolia.com/" target="_blank">Hacker News API</a> &nbsp;·&nbsp;
+  Agent demo by <a href="https://github.com/hyein99/Agent_demo" target="_blank">hyein99/Agent_demo</a>
+</footer>
+
+<script>
+  const AI_KEYWORDS = ['ai', 'llm', 'gpt', 'claude', 'gemini', 'mistral', 'ollama', 'mlx',
+    'openai', 'anthropic', 'deepseek', 'agent', 'transformer', 'diffusion',
+    'hugging face', 'huggingface', 'langchain', 'rag', 'fine-tun', 'neural',
+    'machine learning', 'deep learning', 'generative', 'copilot', 'open source model',
+    'inference', 'benchmark', 'multimodal', 'vector', 'embedding'];
+
+  const FILTER_MAP = {
+    all: AI_KEYWORDS,
+    llm: ['llm', 'gpt', 'claude', 'gemini', 'mistral', 'deepseek', 'transformer', 'openai', 'anthropic', 'language model'],
+    agent: ['agent', 'agentic', 'autopilot', 'autonomous', 'copilot', 'langchain', 'tool use'],
+    'open source': ['open source', 'hugging face', 'huggingface', 'ollama', 'mlx', 'mistral', 'llama', 'open-source'],
+    research: ['research', 'paper', 'benchmark', 'arxiv', 'neural', 'diffusion', 'multimodal', 'fine-tun', 'training'],
+  };
+
+  let allItems = [];
+  let currentFilter = 'all';
+
+  function setFilter(filter, el) {
+    currentFilter = filter;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    renderItems(allItems);
+  }
+
+  function matchesFilter(item) {
+    const keywords = FILTER_MAP[currentFilter] || AI_KEYWORDS;
+    const text = (item.title + ' ' + (item.url || '')).toLowerCase();
+    return keywords.some(k => text.includes(k));
+  }
+
+  function timeAgo(unixTime) {
+    const diff = Math.floor(Date.now() / 1000) - unixTime;
+    if (diff < 3600) return `${Math.floor(diff / 60)}분 전`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`;
+    return `${Math.floor(diff / 86400)}일 전`;
+  }
+
+  function getTagFromTitle(title) {
+    const t = title.toLowerCase();
+    if (t.includes('gpt') || t.includes('openai')) return 'OpenAI';
+    if (t.includes('claude') || t.includes('anthropic')) return 'Anthropic';
+    if (t.includes('gemini') || t.includes('google')) return 'Google';
+    if (t.includes('llama') || t.includes('meta')) return 'Meta';
+    if (t.includes('mistral')) return 'Mistral';
+    if (t.includes('deepseek')) return 'DeepSeek';
+    if (t.includes('agent')) return 'Agent';
+    if (t.includes('open source') || t.includes('hugging')) return 'OSS';
+    if (t.includes('research') || t.includes('paper') || t.includes('arxiv')) return 'Research';
+    return null;
+  }
+
+  function renderItems(items) {
+    const filtered = items.filter(matchesFilter);
+    const el = document.getElementById('content');
+
+    if (filtered.length === 0) {
+      el.innerHTML = `<div class="loading"><p style="color:var(--muted)">해당 카테고리 뉴스가 없습니다.</p></div>`;
+      return;
+    }
+
+    el.innerHTML = `<div class="news-list">${filtered.map((item, i) => {
+      const tag = getTagFromTitle(item.title);
+      const domain = item.url ? (() => { try { return new URL(item.url).hostname.replace('www.', ''); } catch { return ''; } })() : 'news.ycombinator.com';
+      return `
+        <div class="news-card" style="animation-delay:${i * 0.04}s">
+          <div class="card-top">
+            <span class="rank">${i + 1}</span>
+            <div class="card-body">
+              <a class="card-title" href="${item.url || `https://news.ycombinator.com/item?id=${item.objectID}`}" target="_blank" rel="noopener">
+                ${item.title}
+              </a>
+              <div class="card-meta">
+                <span class="score">▲ ${item.points || 0}</span>
+                <span>💬 ${item.num_comments || 0}</span>
+                <span>${timeAgo(item.created_at_i)}</span>
+                <span>${domain}</span>
+                ${tag ? `<span class="tag">${tag}</span>` : ''}
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }).join('')}</div>`;
+  }
+
+  async function loadNews() {
+    const el = document.getElementById('content');
+    el.innerHTML = `<div class="loading"><div class="spinner"></div><p>AI 뉴스 불러오는 중...</p></div>`;
+
+    try {
+      const query = 'AI LLM GPT agent machine learning';
+      const url = `https://hn.algolia.com/api/v1/search?query=${encodeURIComponent(query)}&tags=story&hitsPerPage=60&numericFilters=created_at_i>${Math.floor(Date.now()/1000) - 86400 * 3}`;
+
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      allItems = data.hits
+        .filter(h => {
+          const t = (h.title || '').toLowerCase();
+          return AI_KEYWORDS.some(k => t.includes(k));
+        })
+        .sort((a, b) => (b.points || 0) - (a.points || 0))
+        .slice(0, 30);
+
+      renderItems(allItems);
+    } catch (e) {
+      el.innerHTML = `<div class="error">⚠️ 뉴스를 불러오지 못했습니다: ${e.message}<br><br><button class="refresh-btn" onclick="loadNews()">다시 시도</button></div>`;
+    }
+  }
+
+  // 날짜 표시
+  const now = new Date();
+  document.getElementById('date-display').textContent =
+    now.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' });
+
+  loadNews();
+</script>
+</body>
+</html>
