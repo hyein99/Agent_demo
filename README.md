@@ -30,5 +30,6 @@ python3 -m http.server 3000
 GitHub (이 레포) → OpenClaw MCP → SuperGemma4 → Telegram 알림
 ```
 
+- Push 발생 시 OpenClaw cron이 감지하고 텔레그램으로 알림
 - PR 생성/코드 변경 시 OpenClaw가 자동으로 감지하고 텔레그램으로 알림
 - 텔레그램에서 PR 번호를 보내면 SuperGemma4가 코드 리뷰 수행
