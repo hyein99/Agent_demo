@@ -24,12 +24,10 @@ python3 -m http.server 3000
 # http://localhost:3000
 ```
 
-## 연동 구성
+## 🧠 OpenClaw Memory 구조
 
-```
-GitHub (이 레포) → OpenClaw MCP → SuperGemma4 → Telegram 알림
-```
+이 프로젝트는 OpenClaw의 지속적인 학습과 기억을 위해 다음과 같은 구조를 사용합니다:
 
-- Push 발생 시 OpenClaw cron이 감지하고 텔레그램으로 알림
-- PR 생성/코드 변경 시 OpenClaw가 자동으로 감지하고 텔레그램으로 알림
-- 텔레그램에서 PR 번호를 보내면 SuperGemma4가 코드 리뷰 수행
+- **`MEMORY.md`**: 에이전트의 핵심적인 장기 기억(Long-term memory)입니다. 중요한 결정, 학습한 교훈, 핵심적인 맥락을 담습니다.
+- **`memory/YYYY-MM-DD.md`**: 매일의 작업 기록과 로그를 담는 일일 기록(Daily logs)입니다.
+- **기타 컨텍스트 파일**: `AGENTS.md`, `SOUL.md`, `USER.md`, `TOOLS.md`, `IDENTITY.md` 등을 통해 에이전트의 정체성과 작업 환경을 유지합니다.
